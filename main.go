@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"log"
 	"os"
@@ -35,7 +36,10 @@ func main() {
 	}
 
 	MONGODB_URI := os.Getenv("MONGODB_URI")
-	clientOptions := options.Client().ApplyURI(MONGODB_URI)
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: true,
+	}
+	clientOptions := options.Client().ApplyURI(MONGODB_URI).SetTLSConfig(tlsConfig)
 	client, err := mongo.Connect(context.Background(), clientOptions)
 
 	if err != nil {
